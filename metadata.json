@@ -1,0 +1,6 @@
+{
+  "name": "Lamarra",
+  "description": "Aplikasi Web Tracking Lamaran Kerja Modern & Minimalis (Job Application Tracker)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
