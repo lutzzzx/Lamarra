@@ -334,7 +334,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-200 overflow-x-clip">
       
       {/* Toast Notification Floating Banner */}
       <div className="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none">
@@ -378,7 +378,7 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-24 md:pb-8 space-y-4 sm:space-y-6 w-full overflow-x-clip">
         
         {/* Guest Mode Banner */}
         {(!user || !hasToken) && (

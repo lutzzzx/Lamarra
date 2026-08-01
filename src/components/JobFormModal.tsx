@@ -15,12 +15,9 @@ import {
   Mail, 
   Phone, 
   Linkedin, 
-  FileText,
-  Clock,
-  Sparkles,
-  CheckCircle2,
-  Bookmark,
-  Layers,
+  Clock, 
+  CheckCircle2, 
+  Bookmark, 
   Send,
   UserCheck,
   Award,
@@ -168,31 +165,21 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
     onClose();
   };
 
-  const statusIcons: Record<JobStatus, React.ReactNode> = {
-    wishlist: <Bookmark className="w-3.5 h-3.5" />,
-    applied: <Send className="w-3.5 h-3.5" />,
-    assessment: <FileCode2 className="w-3.5 h-3.5" />,
-    interview: <UserCheck className="w-3.5 h-3.5" />,
-    offer: <Award className="w-3.5 h-3.5" />,
-    rejected: <XCircle className="w-3.5 h-3.5" />,
-    withdrawn: <HelpCircle className="w-3.5 h-3.5" />
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/70 backdrop-blur-md p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl max-w-2xl w-full shadow-2xl relative text-left overflow-hidden my-auto">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl max-w-2xl w-full shadow-2xl relative text-left overflow-hidden my-auto max-h-[92vh] sm:max-h-[90vh] flex flex-col">
         
         {/* Header Bar */}
-        <div className="px-6 py-5 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-md font-bold">
-              <Briefcase className="w-5 h-5" />
+        <div className="px-4 py-3.5 sm:px-6 sm:py-5 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/50 shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 sm:w-10 h-9 sm:h-10 rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-md font-bold shrink-0">
+              <Briefcase className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div>
-              <h2 className="text-lg font-extrabold text-zinc-900 dark:text-white tracking-tight">
-                {initialData ? 'Edit Data Lamaran' : 'Tambah Lamaran Kerja Baru'}
+            <div className="min-w-0">
+              <h2 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-white tracking-tight truncate">
+                {initialData ? 'Edit Data Lamaran' : 'Tambah Lamaran Kerja'}
               </h2>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 truncate hidden sm:block">
                 Kelola informasi perusahaan, posisi, status seleksi & pengingat
               </p>
             </div>
@@ -200,56 +187,60 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
 
           <button
             onClick={onClose}
-            className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 p-2 rounded-xl hover:bg-zinc-200/50 dark:hover:bg-zinc-800 transition-colors"
+            className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 p-2 rounded-xl hover:bg-zinc-200/50 dark:hover:bg-zinc-800 transition-colors shrink-0 min-h-[38px] min-w-[38px] flex items-center justify-center touch-manipulation"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Tab Selector Navigation */}
-        <div className="px-6 pt-3 bg-zinc-50/30 dark:bg-zinc-900/30 border-b border-zinc-100 dark:border-zinc-800 flex gap-2">
-          <button
-            type="button"
-            onClick={() => setActiveTab('general')}
-            className={`pb-3 px-3 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 ${
-              activeTab === 'general'
-                ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-white'
-                : 'border-transparent text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
-            }`}
-          >
-            <Building2 className="w-3.5 h-3.5" />
-            <span>1. Perusahaan & Status</span>
-          </button>
+        {/* Modern Segmented Pill Control Navigation Tabs */}
+        <div className="px-3 sm:px-6 py-2.5 sm:py-3 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-900/30 shrink-0">
+          <div className="bg-zinc-100 dark:bg-zinc-800/80 p-1.5 rounded-2xl grid grid-cols-3 gap-1.5 w-full">
+            
+            <button
+              type="button"
+              onClick={() => setActiveTab('general')}
+              className={`w-full py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 min-h-[38px] touch-manipulation ${
+                activeTab === 'general'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700'
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">1. Perusahaan</span>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveTab('details')}
-            className={`pb-3 px-3 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 ${
-              activeTab === 'details'
-                ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-white'
-                : 'border-transparent text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
-            }`}
-          >
-            <Calendar className="w-3.5 h-3.5" />
-            <span>2. Detail & Tenggat</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('details')}
+              className={`w-full py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 min-h-[38px] touch-manipulation ${
+                activeTab === 'details'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700'
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Calendar className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">2. Detail</span>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveTab('recruiter')}
-            className={`pb-3 px-3 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 ${
-              activeTab === 'recruiter'
-                ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-white'
-                : 'border-transparent text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'
-            }`}
-          >
-            <UserIcon className="w-3.5 h-3.5" />
-            <span>3. Recruiter & Catatan</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('recruiter')}
+              className={`w-full py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 min-h-[38px] touch-manipulation ${
+                activeTab === 'recruiter'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700'
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <UserIcon className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">3. Catatan</span>
+            </button>
+
+          </div>
         </div>
 
-        {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+        {/* Form Body - Scrollable */}
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5 sm:space-y-6 overflow-y-auto flex-1 text-left">
           
           {/* TAB 1: PERUSAHAAN & POSISI */}
           {activeTab === 'general' && (
@@ -269,7 +260,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                       placeholder="Misal: Tokopedia, Traveloka, GoTo"
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white transition-all"
+                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white transition-all min-h-[42px] touch-manipulation"
                     />
                   </div>
                 </div>
@@ -286,7 +277,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                       placeholder="Misal: Senior Frontend Engineer"
                       value={position}
                       onChange={(e) => setPosition(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white transition-all"
+                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white transition-all min-h-[42px] touch-manipulation"
                     />
                   </div>
                 </div>
@@ -306,7 +297,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                         key={stKey}
                         type="button"
                         onClick={() => setStatus(stKey)}
-                        className={`p-2.5 rounded-xl border text-left transition-all flex items-center gap-2 ${
+                        className={`p-2.5 rounded-xl border text-left transition-all flex items-center gap-2 min-h-[42px] touch-manipulation ${
                           isSelected
                             ? `${cfg.badgeBg} ${cfg.badgeBorder} ring-2 ring-zinc-900 dark:ring-white font-bold shadow-xs`
                             : 'bg-zinc-50/50 dark:bg-zinc-800/40 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300'
@@ -323,7 +314,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
               </div>
 
               {/* Priority & Source */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
                 <div>
                   <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                     Tingkat Prioritas
@@ -337,7 +328,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                           key={p}
                           type="button"
                           onClick={() => setPriority(p)}
-                          className={`py-2 px-3 rounded-xl border text-center font-bold text-xs transition-all ${
+                          className={`py-2 px-3 rounded-xl border text-center font-bold text-xs transition-all min-h-[42px] touch-manipulation ${
                             isSelected
                               ? `${cfg.color} ${cfg.border} ring-2 ring-zinc-900 dark:ring-white`
                               : 'bg-zinc-50 dark:bg-zinc-800/40 border-zinc-200 dark:border-zinc-800 text-zinc-500'
@@ -423,7 +414,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                       placeholder="Misal: Jakarta Selatan"
                       value={locationName}
                       onChange={(e) => setLocationName(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white"
+                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white min-h-[42px] touch-manipulation"
                     />
                   </div>
                 </div>
@@ -442,7 +433,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                       placeholder="Misal: Rp 15.000.000 - Rp 20.000.000 / bulan"
                       value={salaryRange}
                       onChange={(e) => setSalaryRange(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white"
+                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white min-h-[42px] touch-manipulation"
                     />
                   </div>
                 </div>
@@ -458,14 +449,14 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                       placeholder="https://..."
                       value={jobUrl}
                       onChange={(e) => setJobUrl(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white"
+                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white min-h-[42px] touch-manipulation"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Dates & Reminders */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
                 <div>
                   <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                     Tanggal Kirim Lamaran
@@ -499,7 +490,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                         type="date"
                         value={initialReminderDate}
                         onChange={(e) => setInitialReminderDate(e.target.value)}
-                        className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white"
+                        className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white min-h-[42px] touch-manipulation"
                       />
                     </div>
                   </div>
@@ -526,7 +517,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                       placeholder="Misal: Rina Wijaya"
                       value={recruiterName}
                       onChange={(e) => setRecruiterName(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white"
+                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white min-h-[42px] touch-manipulation"
                     />
                   </div>
                 </div>
@@ -540,7 +531,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                     placeholder="Misal: Tech Talent Acquisition Lead"
                     value={recruiterTitle}
                     onChange={(e) => setRecruiterTitle(e.target.value)}
-                    className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white"
+                    className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white min-h-[42px] touch-manipulation"
                   />
                 </div>
               </div>
@@ -557,7 +548,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                       placeholder="recruiter@company.com"
                       value={recruiterEmail}
                       onChange={(e) => setRecruiterEmail(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white"
+                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white min-h-[42px] touch-manipulation"
                     />
                   </div>
                 </div>
@@ -573,7 +564,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                       placeholder="+62 812-3456-7890"
                       value={recruiterPhone}
                       onChange={(e) => setRecruiterPhone(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white"
+                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white min-h-[42px] touch-manipulation"
                     />
                   </div>
                 </div>
@@ -589,14 +580,14 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                       placeholder="https://linkedin.com/in/..."
                       value={recruiterLinkedin}
                       onChange={(e) => setRecruiterLinkedin(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white"
+                      className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:outline-none text-zinc-900 dark:text-white min-h-[42px] touch-manipulation"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Notes */}
-              <div className="pt-2">
+              <div className="pt-1">
                 <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                   Catatan Persiapan & Keterangan Lain
                 </label>
@@ -612,52 +603,59 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
             </div>
           )}
 
-          {/* Footer Bar & Actions */}
-          <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3">
-            <div className="flex gap-1.5">
+          {/* Sticky Bottom Footer Bar & Actions */}
+          <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shrink-0 bg-white dark:bg-zinc-900">
+            
+            {/* Stepper Dots Indicator */}
+            <div className="flex justify-center items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => setActiveTab('general')}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${activeTab === 'general' ? 'bg-zinc-900 dark:bg-white w-6' : 'bg-zinc-300 dark:bg-zinc-700'}`}
+                className={`h-2 rounded-full transition-all ${activeTab === 'general' ? 'bg-zinc-900 dark:bg-white w-6' : 'bg-zinc-300 dark:bg-zinc-700 w-2'}`}
+                title="Tahap 1: Perusahaan"
               />
               <button
                 type="button"
                 onClick={() => setActiveTab('details')}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${activeTab === 'details' ? 'bg-zinc-900 dark:bg-white w-6' : 'bg-zinc-300 dark:bg-zinc-700'}`}
+                className={`h-2 rounded-full transition-all ${activeTab === 'details' ? 'bg-zinc-900 dark:bg-white w-6' : 'bg-zinc-300 dark:bg-zinc-700 w-2'}`}
+                title="Tahap 2: Detail"
               />
               <button
                 type="button"
                 onClick={() => setActiveTab('recruiter')}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${activeTab === 'recruiter' ? 'bg-zinc-900 dark:bg-white w-6' : 'bg-zinc-300 dark:bg-zinc-700'}`}
+                className={`h-2 rounded-full transition-all ${activeTab === 'recruiter' ? 'bg-zinc-900 dark:bg-white w-6' : 'bg-zinc-300 dark:bg-zinc-700 w-2'}`}
+                title="Tahap 3: Recruiter"
               />
             </div>
 
+            {/* Action Buttons */}
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 text-zinc-600 dark:text-zinc-400 font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors text-xs"
+                className="px-3.5 py-2.5 text-zinc-600 dark:text-zinc-400 font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors text-xs min-h-[44px] touch-manipulation shrink-0"
               >
                 Batal
               </button>
 
-              {activeTab !== 'recruiter' ? (
+              {activeTab !== 'recruiter' && (
                 <button
                   type="button"
                   onClick={() => setActiveTab(activeTab === 'general' ? 'details' : 'recruiter')}
-                  className="px-5 py-2.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white font-bold rounded-xl text-xs hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors flex items-center gap-1.5"
+                  className="px-4 py-2.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white font-bold rounded-xl text-xs hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors flex items-center justify-center gap-1 min-h-[44px] touch-manipulation shrink-0"
                 >
                   <span>Lanjut</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
-              ) : null}
+              )}
 
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-2 active:scale-[0.98]"
+                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-[0.98] min-h-[44px] touch-manipulation shrink-0"
               >
-                <CheckCircle2 className="w-4 h-4" />
-                <span>{initialData ? 'Simpan Perubahan' : 'Simpan Lamaran Kerja'}</span>
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span className="sm:hidden">{initialData ? 'Simpan' : 'Simpan'}</span>
+                <span className="hidden sm:inline">{initialData ? 'Simpan Perubahan' : 'Simpan Lamaran Kerja'}</span>
               </button>
             </div>
           </div>

@@ -100,7 +100,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
           </div>
 
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-white">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">
             {isRegister ? 'Buat Akun Lamarra Baru' : 'Masuk ke Lamarra'}
           </h2>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
@@ -171,7 +171,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
+            className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 min-h-[44px] touch-manipulation active:scale-[0.99]"
           >
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin" />

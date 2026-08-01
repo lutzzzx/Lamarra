@@ -31,7 +31,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
           <AlertTriangle className="w-6 h-6" />
         </div>
 
-        <h3 className="text-base font-bold text-zinc-900 dark:text-white">
+        <h3 className="text-base font-semibold text-zinc-900 dark:text-white">
           Konfirmasi Hapus Lamaran
         </h3>
         <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
@@ -41,7 +41,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
         <div className="mt-6 flex items-center justify-end gap-2 text-xs">
           <button
             onClick={onClose}
-            className="px-4 py-2 font-bold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors"
+            className="px-4 py-2.5 font-bold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors min-h-[44px] touch-manipulation"
           >
             Batal
           </button>
@@ -50,9 +50,9 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
               onConfirm();
               onClose();
             }}
-            className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-sm"
+            className="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-sm min-h-[44px] touch-manipulation active:scale-[0.98]"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="w-4 h-4" />
             <span>Hapus Permanen</span>
           </button>
         </div>

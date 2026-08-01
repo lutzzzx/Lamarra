@@ -31,7 +31,7 @@ export const GridView: React.FC<GridViewProps> = ({
 }) => {
   if (jobs.length === 0) {
     return (
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-12 text-center my-4">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 sm:p-12 text-center my-4">
         <Building2 className="w-12 h-12 text-zinc-300 dark:text-zinc-700 mx-auto mb-3" />
         <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">
           Tidak Ada Data Lamaran
@@ -44,7 +44,7 @@ export const GridView: React.FC<GridViewProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 my-2">
       {jobs.map(job => {
         const statusCfg = STATUS_CONFIG[job.status];
         const priorityCfg = PRIORITY_CONFIG[job.priority];
@@ -53,12 +53,12 @@ export const GridView: React.FC<GridViewProps> = ({
           <div
             key={job.id}
             onClick={() => onSelectJob(job)}
-            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 shadow-sm hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 transition-all cursor-pointer flex flex-col justify-between group"
+            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-3.5 sm:p-4 shadow-sm hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 transition-all cursor-pointer flex flex-col justify-between group active:scale-[0.99] touch-manipulation"
           >
             <div>
               {/* Header: Company Initials, Priority, Status Badge */}
               <div className="flex items-start justify-between gap-2 mb-3">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-bold text-sm flex items-center justify-center shrink-0 border border-zinc-200 dark:border-zinc-700">
                     {getCompanyInitials(job.companyName)}
                   </div>
@@ -67,7 +67,7 @@ export const GridView: React.FC<GridViewProps> = ({
                       {job.position}
                     </h3>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate flex items-center gap-1">
-                      <Building2 className="w-3 h-3 text-zinc-400" />
+                      <Building2 className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
                       <span>{job.companyName}</span>
                     </p>
                   </div>
@@ -125,7 +125,7 @@ export const GridView: React.FC<GridViewProps> = ({
             </div>
 
             {/* Card Footer: Date, Source & Actions */}
-            <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">
+            <div className="mt-3.5 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">
               <div className="flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5" />
                 <span>{formatDate(job.appliedDate)}</span>
@@ -136,18 +136,18 @@ export const GridView: React.FC<GridViewProps> = ({
               <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                 <button
                   onClick={() => onEditJob(job)}
-                  className="p-1.5 text-zinc-400 hover:text-zinc-800 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                  className="p-2 text-zinc-400 hover:text-zinc-800 dark:hover:text-white rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center touch-manipulation"
                   title="Edit Data"
                 >
-                  <Edit3 className="w-3.5 h-3.5" />
+                  <Edit3 className="w-4 h-4" />
                 </button>
 
                 <button
                   onClick={() => onDeleteJob(job.id)}
-                  className="p-1.5 text-rose-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                  className="p-2 text-rose-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center touch-manipulation"
                   title="Hapus Data"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>

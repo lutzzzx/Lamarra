@@ -30,20 +30,20 @@ export const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 backdrop-blur-sm p-4">
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 shadow-2xl relative text-left">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 backdrop-blur-sm p-3 sm:p-4">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-2xl w-full max-h-[90vh] sm:max-h-[85vh] overflow-y-auto p-4 sm:p-6 shadow-2xl relative text-left">
         
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-1 rounded-lg"
+          className="absolute top-4 right-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-1.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="mb-6">
+        <div className="mb-6 pr-8">
           <div className="flex items-center gap-2">
             <PieChart className="w-5 h-5 text-zinc-900 dark:text-white" />
-            <h2 className="text-lg font-bold text-zinc-900 dark:text-white">
+            <h2 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-white">
               Analitik & Laporan Performa Lamaran
             </h2>
           </div>
@@ -53,7 +53,7 @@ export const AnalyticsModal: React.FC<AnalyticsModalProps> = ({
         </div>
 
         {/* Primary Conversion Metrics Cards */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 mb-6">
           <div className="bg-zinc-50 dark:bg-zinc-800/40 p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800">
             <span className="text-[11px] text-zinc-400 font-semibold block">Response Rate</span>
             <span className="text-2xl font-black text-zinc-900 dark:text-white">{summary.responseRate}%</span>

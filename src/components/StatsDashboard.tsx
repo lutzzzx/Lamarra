@@ -34,13 +34,13 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
   const urgentAgenda = reminders.filter(r => !r.isCompleted && (isUrgent(r.dueDate) || isOverdue(r.dueDate)));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       
       {/* Urgent Agenda Banner if exists */}
       {urgentAgenda.length > 0 && (
-        <div className="bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-lg p-3.5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xs">
+        <div className="bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl p-3 sm:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-md bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 flex items-center justify-center shrink-0">
               <AlertTriangle className="w-4 h-4" />
             </div>
             <div>
@@ -58,7 +58,7 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
           </div>
           <button
             onClick={onOpenRemindersModal}
-            className="text-xs font-bold text-amber-900 dark:text-amber-200 bg-amber-200/60 hover:bg-amber-200 dark:bg-amber-900/50 dark:hover:bg-amber-900 px-3 py-1.5 rounded-md transition-colors flex items-center gap-1 shrink-0"
+            className="w-full sm:w-auto text-xs font-bold text-amber-900 dark:text-amber-200 bg-amber-200/60 hover:bg-amber-200 dark:bg-amber-900/50 dark:hover:bg-amber-900 px-3 py-2 rounded-xl transition-colors flex items-center justify-center gap-1 shrink-0 min-h-[38px] touch-manipulation"
           >
             <span>Kelola Agenda ({urgentAgenda.length})</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -66,86 +66,86 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
         </div>
       )}
 
-      {/* Primary Metrics Grid matching Sleek Interface design */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      {/* Primary Metrics Grid (Hidden on mobile < 640px to keep dashboard clean and compact) */}
+      <div className="hidden sm:grid sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
         
         {/* Total Applications */}
         <div 
           onClick={() => onFilterStatus && onFilterStatus('all')}
-          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3.5 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-all shadow-2xs group"
+          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-all shadow-2xs group active:scale-95 touch-manipulation min-h-[76px]"
         >
           <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest text-center">Total Lamaran</span>
-          <span className="text-2xl font-black mt-1 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.total}</span>
+          <span className="text-xl sm:text-2xl font-black mt-0.5 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.total}</span>
         </div>
 
         {/* Wishlist */}
         <div 
           onClick={() => onFilterStatus && onFilterStatus('wishlist')}
-          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3.5 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-all shadow-2xs group"
+          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-all shadow-2xs group active:scale-95 touch-manipulation min-h-[76px]"
         >
           <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest text-center">Wishlist</span>
-          <span className="text-2xl font-black mt-1 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.wishlist}</span>
+          <span className="text-xl sm:text-2xl font-black mt-0.5 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.wishlist}</span>
         </div>
 
         {/* Applied */}
         <div 
           onClick={() => onFilterStatus && onFilterStatus('applied')}
-          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3.5 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-blue-300 dark:hover:border-blue-800 transition-all shadow-2xs group"
+          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-300 dark:hover:border-blue-800 transition-all shadow-2xs group active:scale-95 touch-manipulation min-h-[76px]"
         >
           <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest text-center">Applied</span>
-          <span className="text-2xl font-black mt-1 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.applied}</span>
+          <span className="text-xl sm:text-2xl font-black mt-0.5 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.applied}</span>
         </div>
 
         {/* Assessment */}
         <div 
           onClick={() => onFilterStatus && onFilterStatus('assessment')}
-          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3.5 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-amber-300 dark:hover:border-amber-800 transition-all shadow-2xs group"
+          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-amber-300 dark:hover:border-amber-800 transition-all shadow-2xs group active:scale-95 touch-manipulation min-h-[76px]"
         >
           <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest text-center">Assessment</span>
-          <span className="text-2xl font-black mt-1 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.assessment}</span>
+          <span className="text-xl sm:text-2xl font-black mt-0.5 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.assessment}</span>
         </div>
 
         {/* Interview */}
         <div 
           onClick={() => onFilterStatus && onFilterStatus('interview')}
-          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3.5 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-purple-300 dark:hover:border-purple-800 transition-all shadow-2xs group"
+          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-purple-300 dark:hover:border-purple-800 transition-all shadow-2xs group active:scale-95 touch-manipulation min-h-[76px]"
         >
           <span className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-widest text-center">Interview</span>
-          <span className="text-2xl font-black mt-1 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.interview}</span>
+          <span className="text-xl sm:text-2xl font-black mt-0.5 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.interview}</span>
         </div>
 
         {/* Offer */}
         <div 
           onClick={() => onFilterStatus && onFilterStatus('offer')}
-          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3.5 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-emerald-300 dark:hover:border-emerald-800 transition-all shadow-2xs group"
+          className="bg-zinc-100/60 dark:bg-zinc-900/80 border border-zinc-200/70 dark:border-zinc-800 p-3 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-emerald-300 dark:hover:border-emerald-800 transition-all shadow-2xs group active:scale-95 touch-manipulation min-h-[76px]"
         >
           <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest text-center">Offer</span>
-          <span className="text-2xl font-black mt-1 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.offer}</span>
+          <span className="text-xl sm:text-2xl font-black mt-0.5 text-zinc-900 dark:text-white group-hover:scale-105 transition-transform">{summary.offer}</span>
         </div>
 
       </div>
 
-      {/* Conversion Funnel Progress Bar */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 shadow-xs">
+      {/* Conversion Funnel Progress Bar (Always visible on mobile & desktop) */}
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 sm:p-4 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
           <div>
             <h3 className="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-              <TrendingUp className="w-3.5 h-3.5 text-zinc-500" />
+              <TrendingUp className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
               <span>Rasio Konversi Tahapan Lamaran</span>
             </h3>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-medium">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium">
             <div>
-              <span className="text-zinc-400 text-[11px]">Response Rate:</span>{' '}
+              <span className="text-zinc-400 text-[11px]">Response:</span>{' '}
               <span className="font-bold text-zinc-800 dark:text-zinc-200">{summary.responseRate}%</span>
             </div>
             <div>
-              <span className="text-zinc-400 text-[11px]">Interview Rate:</span>{' '}
+              <span className="text-zinc-400 text-[11px]">Interview:</span>{' '}
               <span className="font-bold text-purple-700 dark:text-purple-300">{summary.interviewRate}%</span>
             </div>
             <div>
-              <span className="text-zinc-400 text-[11px]">Offer Rate:</span>{' '}
+              <span className="text-zinc-400 text-[11px]">Offer:</span>{' '}
               <span className="font-bold text-emerald-700 dark:text-emerald-300">{summary.offerRate}%</span>
             </div>
           </div>
@@ -200,29 +200,29 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
             </div>
 
             {/* Legend Indicators */}
-            <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-zinc-500 dark:text-zinc-400">
+            <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1.5 text-[11px] text-zinc-500 dark:text-zinc-400">
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
+                <span className="w-2 h-2 rounded-full bg-blue-500 inline-block shrink-0" />
                 Applied ({summary.applied})
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
+                <span className="w-2 h-2 rounded-full bg-amber-500 inline-block shrink-0" />
                 Assessment ({summary.assessment})
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-purple-500 inline-block" />
+                <span className="w-2 h-2 rounded-full bg-purple-500 inline-block shrink-0" />
                 Interview ({summary.interview})
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block shrink-0" />
                 Offer ({summary.offer})
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-rose-400 inline-block" />
+                <span className="w-2 h-2 rounded-full bg-rose-400 inline-block shrink-0" />
                 Rejected ({summary.rejected})
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700 inline-block" />
+                <span className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700 inline-block shrink-0" />
                 Wishlist ({summary.wishlist})
               </span>
             </div>

@@ -21,7 +21,8 @@ import {
   CheckCircle2, 
   Send,
   MessageSquare,
-  AlertCircle
+  AlertCircle,
+  History
 } from 'lucide-react';
 
 interface JobDetailDrawerProps {
@@ -78,6 +79,9 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
 
   const statusCfg = STATUS_CONFIG[job.status];
   const priorityCfg = PRIORITY_CONFIG[job.priority];
+
+  const activeRemindersCount = job.reminders?.filter(r => !r.isCompleted).length || 0;
+  const timelineCount = job.timeline?.length || 0;
 
   const handleCreateTimeline = (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,50 +141,50 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
     >
       <div 
         onClick={(e) => e.stopPropagation()} 
-        className="w-full max-w-2xl bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800 h-full overflow-y-auto flex flex-col shadow-2xl text-left cursor-default"
+        className="w-full max-w-2xl lg:max-w-4xl bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800 h-full overflow-y-auto flex flex-col shadow-2xl text-left cursor-default transition-all"
       >
         
         {/* Drawer Header */}
-        <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 flex items-start justify-between gap-4 sticky top-0 bg-white/95 dark:bg-zinc-900/95 z-20 backdrop-blur-md">
-          <div className="flex items-start gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-black text-base flex items-center justify-center shrink-0 shadow-sm">
+        <div className="p-4 sm:p-6 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 flex items-start justify-between gap-3 sm:gap-4 sticky top-0 bg-white/95 dark:bg-zinc-900/95 z-20 backdrop-blur-md">
+          <div className="flex items-start gap-3 sm:gap-3.5 min-w-0">
+            <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-black text-sm sm:text-base flex items-center justify-center shrink-0 shadow-sm">
               {getCompanyInitials(job.companyName)}
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-zinc-900 dark:text-white">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-white truncate">
                   {job.position}
                 </h2>
-                <span className={`px-2 py-0.5 text-[10px] font-bold rounded-md border ${priorityCfg.color} ${priorityCfg.border}`}>
+                <span className={`px-2 py-0.5 text-[10px] font-bold rounded-md border ${priorityCfg.color} ${priorityCfg.border} shrink-0`}>
                   {priorityCfg.label}
                 </span>
               </div>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 font-medium flex items-center gap-1.5 mt-0.5">
-                <Building2 className="w-4 h-4 text-zinc-400" />
-                <span>{job.companyName}</span>
-                {job.locationName && <span>• {job.locationName}</span>}
+              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-medium flex items-center gap-1.5 mt-0.5 truncate">
+                <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-400 shrink-0" />
+                <span className="truncate">{job.companyName}</span>
+                {job.locationName && <span className="truncate">• {job.locationName}</span>}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 shrink-0">
             <button
               onClick={() => onEdit(job)}
-              className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors"
+              className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors min-h-[38px] min-w-[38px] flex items-center justify-center touch-manipulation"
               title="Edit Lamaran"
             >
-              <Edit3 className="w-4.5 h-4.5" />
+              <Edit3 className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
             </button>
             <button
               onClick={() => onDelete(job.id)}
-              className="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl transition-colors"
+              className="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl transition-colors min-h-[38px] min-w-[38px] flex items-center justify-center touch-manipulation"
               title="Hapus Lamaran"
             >
-              <Trash2 className="w-4.5 h-4.5" />
+              <Trash2 className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors ml-1"
+              className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors min-h-[38px] min-w-[38px] flex items-center justify-center touch-manipulation ml-0.5"
             >
               <X className="w-5 h-5" />
             </button>
@@ -188,11 +192,11 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
         </div>
 
         {/* Quick Status Bar */}
-        <div className="px-6 py-3 bg-zinc-100/80 dark:bg-zinc-800/60 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs">
-          <span className="font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider text-[11px]">
+        <div className="px-4 sm:px-6 py-2.5 sm:py-3 bg-zinc-100/80 dark:bg-zinc-800/60 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-3 text-xs">
+          <span className="font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider text-[10px] sm:text-[11px] shrink-0">
             Status Saat Ini:
           </span>
-          <div className="w-48">
+          <div className="w-full max-w-[200px]">
             <CustomSelect
               size="sm"
               value={job.status}
@@ -206,84 +210,115 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="px-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center gap-6 text-xs font-bold text-zinc-500 dark:text-zinc-400">
-          <button
-            onClick={() => setActiveTab('overview')}
-            className={`py-3 border-b-2 transition-all ${
-              activeTab === 'overview'
-                ? 'border-zinc-900 text-zinc-900 dark:border-white dark:text-white'
-                : 'border-transparent hover:text-zinc-800 dark:hover:text-zinc-200'
-            }`}
-          >
-            Informasi Ringkas
-          </button>
-          <button
-            onClick={() => setActiveTab('timeline')}
-            className={`py-3 border-b-2 transition-all flex items-center gap-1.5 ${
-              activeTab === 'timeline'
-                ? 'border-zinc-900 text-zinc-900 dark:border-white dark:text-white'
-                : 'border-transparent hover:text-zinc-800 dark:hover:text-zinc-200'
-            }`}
-          >
-            <span>Timeline Riwayat</span>
-            <span className="px-1.5 py-0.2 bg-zinc-100 dark:bg-zinc-800 rounded-md text-[10px]">
-              {job.timeline?.length || 0}
-            </span>
-          </button>
-          <button
-            onClick={() => setActiveTab('reminders')}
-            className={`py-3 border-b-2 transition-all flex items-center gap-1.5 ${
-              activeTab === 'reminders'
-                ? 'border-zinc-900 text-zinc-900 dark:border-white dark:text-white'
-                : 'border-transparent hover:text-zinc-800 dark:hover:text-zinc-200'
-            }`}
-          >
-            <span>Agenda & Reminders</span>
-            <span className="px-1.5 py-0.2 bg-zinc-100 dark:bg-zinc-800 rounded-md text-[10px]">
-              {job.reminders?.filter(r => !r.isCompleted).length || 0}
-            </span>
-          </button>
-          <button
-            onClick={() => setActiveTab('recruiter')}
-            className={`py-3 border-b-2 transition-all ${
-              activeTab === 'recruiter'
-                ? 'border-zinc-900 text-zinc-900 dark:border-white dark:text-white'
-                : 'border-transparent hover:text-zinc-800 dark:hover:text-zinc-200'
-            }`}
-          >
-            Recruiter & Dokumen
-          </button>
+        {/* Modern Segmented Pill Control Navigation Tabs */}
+        <div className="px-3 sm:px-6 py-2.5 sm:py-3 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
+          <div className="bg-zinc-100 dark:bg-zinc-800/80 p-1.5 rounded-2xl flex items-center gap-1.5 overflow-x-auto scrollbar-none touch-pan-x whitespace-nowrap w-full">
+            
+            {/* Tab 1: Ringkasan */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('overview')}
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 flex-none min-h-[38px] touch-manipulation whitespace-nowrap ${
+                activeTab === 'overview'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700'
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5 shrink-0" />
+              <span className="sm:hidden">Ringkasan</span>
+              <span className="hidden sm:inline">Informasi Ringkas</span>
+            </button>
+
+            {/* Tab 2: Timeline */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('timeline')}
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 flex-none min-h-[38px] touch-manipulation whitespace-nowrap ${
+                activeTab === 'timeline'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700'
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <History className="w-3.5 h-3.5 shrink-0" />
+              <span className="sm:hidden">Timeline</span>
+              <span className="hidden sm:inline">Timeline Riwayat</span>
+              {timelineCount > 0 && (
+                <span className={`px-1.5 py-0.2 text-[10px] font-extrabold rounded-md shrink-0 ${
+                  activeTab === 'timeline' 
+                    ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white' 
+                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300'
+                }`}>
+                  {timelineCount}
+                </span>
+              )}
+            </button>
+
+            {/* Tab 3: Agenda & Reminders */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('reminders')}
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 flex-none min-h-[38px] touch-manipulation whitespace-nowrap ${
+                activeTab === 'reminders'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700'
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Calendar className="w-3.5 h-3.5 shrink-0" />
+              <span className="sm:hidden">Agenda</span>
+              <span className="hidden sm:inline">Agenda & Reminders</span>
+              {activeRemindersCount > 0 && (
+                <span className="px-1.5 py-0.2 text-[10px] font-extrabold rounded-md bg-amber-500 text-white shrink-0">
+                  {activeRemindersCount}
+                </span>
+              )}
+            </button>
+
+            {/* Tab 4: Recruiter & Dokumen */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('recruiter')}
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 flex-none min-h-[38px] touch-manipulation whitespace-nowrap ${
+                activeTab === 'recruiter'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700'
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <UserIcon className="w-3.5 h-3.5 shrink-0" />
+              <span className="sm:hidden">Kontak</span>
+              <span className="hidden sm:inline">Recruiter & Dokumen</span>
+            </button>
+
+          </div>
         </div>
 
         {/* Tab Contents */}
-        <div className="p-6 flex-1 space-y-6">
+        <div className="p-4 sm:p-6 flex-1 space-y-5 sm:space-y-6">
 
           {/* TAB 1: OVERVIEW */}
           {activeTab === 'overview' && (
-            <div className="space-y-6">
+            <div className="space-y-5 sm:space-y-6">
               
               {/* Key Attributes Grid */}
-              <div className="grid grid-cols-2 gap-4 bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800 p-4 rounded-2xl text-xs">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800 p-3.5 sm:p-4 rounded-2xl text-xs">
                 <div>
-                  <span className="text-zinc-400 font-medium block">Sumber Lowongan</span>
+                  <span className="text-zinc-400 font-medium block text-[11px]">Sumber Lowongan</span>
                   <span className="font-bold text-zinc-800 dark:text-zinc-200">{job.source}</span>
                 </div>
                 <div>
-                  <span className="text-zinc-400 font-medium block">Tipe Pekerjaan</span>
+                  <span className="text-zinc-400 font-medium block text-[11px]">Tipe Pekerjaan</span>
                   <span className="font-bold text-zinc-800 dark:text-zinc-200">{job.workType} ({job.workLocation})</span>
                 </div>
                 <div>
-                  <span className="text-zinc-400 font-medium block">Rentang Gaji</span>
+                  <span className="text-zinc-400 font-medium block text-[11px]">Rentang Gaji</span>
                   <span className="font-bold text-emerald-700 dark:text-emerald-400">{job.salaryRange || 'Tidak dicantumkan'}</span>
                 </div>
                 <div>
-                  <span className="text-zinc-400 font-medium block">Tanggal Apply</span>
+                  <span className="text-zinc-400 font-medium block text-[11px]">Tanggal Apply</span>
                   <span className="font-bold text-zinc-800 dark:text-zinc-200">{formatDate(job.appliedDate)}</span>
                 </div>
                 {job.deadlineDate && (
-                  <div className="col-span-2">
-                    <span className="text-zinc-400 font-medium block">Batas Waktu / Deadline</span>
+                  <div className="col-span-2 pt-1 border-t border-zinc-100 dark:border-zinc-800">
+                    <span className="text-zinc-400 font-medium block text-[11px]">Batas Waktu / Deadline</span>
                     <span className="font-bold text-rose-700 dark:text-rose-400">{formatDate(job.deadlineDate)} ({formatRelativeDays(job.deadlineDate)})</span>
                   </div>
                 )}
@@ -312,7 +347,7 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
                 <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
                   Catatan Tambahan
                 </h4>
-                <div className="p-4 bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap">
+                <div className="p-3.5 sm:p-4 bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap">
                   {job.notes || 'Belum ada catatan khusus untuk lamaran ini.'}
                 </div>
               </div>
@@ -322,17 +357,17 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
 
           {/* TAB 2: TIMELINE ACTIVITES */}
           {activeTab === 'timeline' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
+            <div className="space-y-5 sm:space-y-6">
+              <div className="flex items-center justify-between gap-2">
                 <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
                   Riwayat Aktivitas Kronologis
                 </h3>
                 <button
                   onClick={() => setShowAddTimeline(!showAddTimeline)}
-                  className="px-3 py-1.5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-bold rounded-xl flex items-center gap-1"
+                  className="px-3 py-1.5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-bold rounded-xl flex items-center gap-1 shadow-2xs shrink-0 min-h-[36px] touch-manipulation"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  <span>Tambah Catatan Riwayat</span>
+                  <span>Catatan Riwayat</span>
                 </button>
               </div>
 
@@ -340,7 +375,7 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
               {showAddTimeline && (
                 <form onSubmit={handleCreateTimeline} className="p-4 bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700 rounded-2xl space-y-3 text-xs">
                   <h4 className="font-bold text-zinc-900 dark:text-white">Tambah Aktivitas Riwayat Baru</h4>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block font-bold text-zinc-600 dark:text-zinc-400 mb-1">Tanggal</label>
                       <input
@@ -348,7 +383,7 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
                         required
                         value={tlDate}
                         onChange={(e) => setTlDate(e.target.value)}
-                        className="w-full p-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-white"
+                        className="w-full p-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-white min-h-[40px]"
                       />
                     </div>
                     <div>
@@ -375,7 +410,7 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
                       placeholder="Misal: Wawancara Teknis Tahap 1"
                       value={tlTitle}
                       onChange={(e) => setTlTitle(e.target.value)}
-                      className="w-full p-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-white"
+                      className="w-full p-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-white min-h-[40px]"
                     />
                   </div>
                   <div>
@@ -385,20 +420,20 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
                       placeholder="Rincian atau hasil dari aktivitas..."
                       value={tlNotes}
                       onChange={(e) => setTlNotes(e.target.value)}
-                      className="w-full p-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-white"
+                      className="w-full p-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-white"
                     />
                   </div>
                   <div className="flex justify-end gap-2 pt-1">
                     <button
                       type="button"
                       onClick={() => setShowAddTimeline(false)}
-                      className="px-3 py-1.5 text-zinc-500 hover:text-zinc-800"
+                      className="px-3 py-2 text-zinc-500 hover:text-zinc-800 font-bold min-h-[38px] touch-manipulation"
                     >
                       Batal
                     </button>
                     <button
                       type="submit"
-                      className="px-3 py-1.5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold rounded-lg"
+                      className="px-4 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold rounded-xl shadow-xs min-h-[38px] touch-manipulation"
                     >
                       Simpan Aktivitas
                     </button>
@@ -407,41 +442,45 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
               )}
 
               {/* Timeline List */}
-              <div className="relative pl-6 border-l-2 border-zinc-200 dark:border-zinc-800 space-y-6">
-                {job.timeline && job.timeline.map(item => (
-                  <div key={item.id} className="relative">
-                    <span className="w-3 h-3 rounded-full bg-zinc-900 dark:bg-white absolute -left-[31px] top-1 border-2 border-white dark:border-zinc-900" />
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-zinc-900 dark:text-white">
-                          {item.title}
-                        </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-500 font-medium">
-                          {formatDate(item.date)}
-                        </span>
+              <div className="relative pl-6 border-l-2 border-zinc-200 dark:border-zinc-800 space-y-5">
+                {(!job.timeline || job.timeline.length === 0) ? (
+                  <p className="text-xs text-zinc-400 py-4">Belum ada riwayat aktivitas yang dicatat.</p>
+                ) : (
+                  job.timeline.map(item => (
+                    <div key={item.id} className="relative">
+                      <span className="w-3 h-3 rounded-full bg-zinc-900 dark:bg-white absolute -left-[31px] top-1 border-2 border-white dark:border-zinc-900" />
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-bold text-zinc-900 dark:text-white">
+                            {item.title}
+                          </span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-500 font-medium">
+                            {formatDate(item.date)}
+                          </span>
+                        </div>
+                        {item.notes && (
+                          <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 bg-zinc-50 dark:bg-zinc-800/40 p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800">
+                            {item.notes}
+                          </p>
+                        )}
                       </div>
-                      {item.notes && (
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 bg-zinc-50 dark:bg-zinc-800/40 p-3 rounded-xl border border-zinc-200/80 dark:border-zinc-800">
-                          {item.notes}
-                        </p>
-                      )}
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           )}
 
           {/* TAB 3: REMINDERS & AGENDA */}
           {activeTab === 'reminders' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
+            <div className="space-y-5 sm:space-y-6">
+              <div className="flex items-center justify-between gap-2">
                 <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
                   Pengingat & Jadwal Penting
                 </h3>
                 <button
                   onClick={() => setShowAddReminder(!showAddReminder)}
-                  className="px-3 py-1.5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-bold rounded-xl flex items-center gap-1"
+                  className="px-3 py-1.5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-bold rounded-xl flex items-center gap-1 shadow-2xs shrink-0 min-h-[36px] touch-manipulation"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Tambah Pengingat</span>
@@ -460,7 +499,7 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
                       placeholder="Misal: Follow-up HR via Email"
                       value={remTitle}
                       onChange={(e) => setRemTitle(e.target.value)}
-                      className="w-full p-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-white"
+                      className="w-full p-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-white min-h-[40px]"
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -500,13 +539,13 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowAddReminder(false)}
-                      className="px-3 py-1.5 text-zinc-500 hover:text-zinc-800"
+                      className="px-3 py-2 text-zinc-500 hover:text-zinc-800 font-bold min-h-[38px] touch-manipulation"
                     >
                       Batal
                     </button>
                     <button
                       type="submit"
-                      className="px-3 py-1.5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold rounded-lg"
+                      className="px-4 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold rounded-xl shadow-xs min-h-[38px] touch-manipulation"
                     >
                       Simpan Agenda
                     </button>
@@ -573,65 +612,77 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
                               type="submit"
                               className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-lg shadow-2xs"
                             >
-                              Simpan
+                      Simpan
                             </button>
                           </div>
                         </form>
                       );
                     }
-
                     return (
                       <div
                         key={rem.id}
-                        className={`p-3.5 rounded-xl border flex items-center justify-between gap-3 text-xs transition-all ${
+                        className={`p-3.5 rounded-2xl border flex flex-col gap-2.5 text-xs transition-all ${
                           rem.isCompleted
                             ? 'bg-zinc-50 dark:bg-zinc-800/30 border-zinc-200 dark:border-zinc-800 text-zinc-400 line-through'
-                            : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 shadow-sm'
+                            : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 shadow-xs'
                         }`}
                       >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <input
-                            type="checkbox"
-                            checked={rem.isCompleted}
-                            onChange={() => onToggleReminder(job.id, rem.id)}
-                            className="w-4 h-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 cursor-pointer"
-                          />
-                          <div className="min-w-0">
-                            <div className="font-bold truncate">{rem.title}</div>
-                            <div className="text-[11px] text-zinc-400 flex items-center gap-1 mt-0.5">
-                              <Clock className="w-3 h-3" />
-                              <span>{formatDate(rem.dueDate)}{rem.dueTime ? ` pk ${rem.dueTime}` : ''}</span>
-                              <span>•</span>
-                              <span className="font-semibold">{formatRelativeDays(rem.dueDate)}</span>
+                        {/* Top Row: Checkbox, Title, and Badge */}
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-start gap-2.5 min-w-0">
+                            <input
+                              type="checkbox"
+                              checked={rem.isCompleted}
+                              onChange={() => onToggleReminder(job.id, rem.id)}
+                              className="w-4 h-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 cursor-pointer shrink-0 mt-0.5"
+                            />
+                            <span className="font-bold text-xs text-zinc-900 dark:text-white leading-snug break-words">
+                              {rem.title}
+                            </span>
+                          </div>
+                          <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 shrink-0 border border-zinc-200/60 dark:border-zinc-700/60">
+                            {rem.type}
+                          </span>
+                        </div>
+
+                        {/* Bottom Row: Date/Time & Action Buttons */}
+                        <div className="flex items-center justify-between gap-2 text-[11px] text-zinc-500 dark:text-zinc-400 pt-2 border-t border-zinc-100 dark:border-zinc-800/80">
+                          <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+                            <div className="flex items-center gap-1 font-medium text-zinc-600 dark:text-zinc-300">
+                              <Clock className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                              <span className="whitespace-nowrap">{formatDate(rem.dueDate)}{rem.dueTime ? ` pk ${rem.dueTime}` : ''}</span>
                             </div>
+                            <span className="text-zinc-300 dark:text-zinc-700">•</span>
+                            <span className="font-semibold text-amber-600 dark:text-amber-400 whitespace-nowrap">
+                              {formatRelativeDays(rem.dueDate)}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1 shrink-0">
+                            {onUpdateReminder && (
+                              <button
+                                type="button"
+                                onClick={() => startEditRem(rem)}
+                                className="p-1.5 text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center touch-manipulation"
+                                title="Edit Pengingat"
+                              >
+                                <Edit3 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+
+                            {onDeleteReminder && (
+                              <button
+                                type="button"
+                                onClick={() => onDeleteReminder(rem.id)}
+                                className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center touch-manipulation"
+                                title="Hapus Pengingat"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-1 shrink-0">
-                          <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 mr-1">
-                            {rem.type}
-                          </span>
-
-                          {onUpdateReminder && (
-                            <button
-                              onClick={() => startEditRem(rem)}
-                              className="p-1 text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-                              title="Edit Pengingat"
-                            >
-                              <Edit3 className="w-3.5 h-3.5" />
-                            </button>
-                          )}
-
-                          {onDeleteReminder && (
-                            <button
-                              onClick={() => onDeleteReminder(rem.id)}
-                              className="p-1 text-rose-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
-                              title="Hapus Pengingat"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          )}
-                        </div>
                       </div>
                     );
                   })
@@ -642,7 +693,7 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
 
           {/* TAB 4: RECRUITER & DOCUMENTS */}
           {activeTab === 'recruiter' && (
-            <div className="space-y-6 text-xs">
+            <div className="space-y-5 sm:space-y-6 text-xs">
               
               {/* Recruiter Section */}
               <div>
@@ -653,7 +704,7 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
                   <div className="p-4 bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800 rounded-2xl space-y-2">
                     {job.recruiter.name && (
                       <div className="flex items-center gap-2 font-bold text-zinc-900 dark:text-white">
-                        <UserIcon className="w-4 h-4 text-zinc-400" />
+                        <UserIcon className="w-4 h-4 text-zinc-400 shrink-0" />
                         <span>{job.recruiter.name}</span>
                         {job.recruiter.title && (
                           <span className="text-xs font-normal text-zinc-500">({job.recruiter.title})</span>
@@ -662,20 +713,20 @@ export const JobDetailDrawer: React.FC<JobDetailDrawerProps> = ({
                     )}
                     {job.recruiter.email && (
                       <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
-                        <Mail className="w-4 h-4 text-zinc-400" />
-                        <a href={`mailto:${job.recruiter.email}`} className="hover:underline">{job.recruiter.email}</a>
+                        <Mail className="w-4 h-4 text-zinc-400 shrink-0" />
+                        <a href={`mailto:${job.recruiter.email}`} className="hover:underline truncate">{job.recruiter.email}</a>
                       </div>
                     )}
                     {job.recruiter.phone && (
                       <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
-                        <Phone className="w-4 h-4 text-zinc-400" />
+                        <Phone className="w-4 h-4 text-zinc-400 shrink-0" />
                         <span>{job.recruiter.phone}</span>
                       </div>
                     )}
                     {job.recruiter.linkedin && (
                       <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold">
-                        <Linkedin className="w-4 h-4" />
-                        <a href={job.recruiter.linkedin} target="_blank" rel="noreferrer" className="hover:underline">Profil LinkedIn Recruiter</a>
+                        <Linkedin className="w-4 h-4 shrink-0" />
+                        <a href={job.recruiter.linkedin} target="_blank" rel="noreferrer" className="hover:underline truncate">Profil LinkedIn Recruiter</a>
                       </div>
                     )}
                   </div>

@@ -80,8 +80,8 @@ export const DataExportImportModal: React.FC<DataExportImportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 backdrop-blur-sm p-4">
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative text-left">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 backdrop-blur-sm p-3 sm:p-4">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-4 sm:p-6 shadow-2xl relative text-left">
         
         <button
           onClick={onClose}
@@ -93,7 +93,7 @@ export const DataExportImportModal: React.FC<DataExportImportModalProps> = ({
         <div className="mb-6">
           <div className="flex items-center gap-2">
             <Download className="w-5 h-5 text-zinc-900 dark:text-white" />
-            <h2 className="text-lg font-bold text-zinc-900 dark:text-white">
+            <h2 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-white">
               Export & Import Backup Data (PostgreSQL)
             </h2>
           </div>

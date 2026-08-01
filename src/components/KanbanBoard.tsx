@@ -120,7 +120,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     const x = e.clientX;
 
     if (x < rect.left + threshold) {
-      // Faster, responsive speed: -6px to -20px per frame
       const ratio = (rect.left + threshold - x) / threshold;
       scrollSpeedRef.current = -Math.max(6, Math.min(20, 6 + ratio * 14));
       startAutoScrollLoop();
@@ -135,7 +134,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
 
   const scrollBoard = (direction: 'left' | 'right') => {
     if (containerRef.current) {
-      const amount = direction === 'left' ? -320 : 320;
+      const amount = direction === 'left' ? -290 : 290;
       containerRef.current.scrollBy({ left: amount, behavior: 'smooth' });
     }
   };
@@ -145,29 +144,29 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
       
       {/* Scroll Navigation Header & Quick Controls */}
       <div className="flex items-center justify-between pb-3 px-1 text-xs">
-        <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 font-medium">
-          <span>Board Kanban (7 Status)</span>
-          <span className="text-zinc-300 dark:text-zinc-700">•</span>
-          <span className="text-[11px] text-zinc-400">Gunakan tombol panah / drag kartu ke tepi untuk geser</span>
+        <div className="flex items-center gap-1.5 sm:gap-2 text-zinc-500 dark:text-zinc-400 font-medium">
+          <span className="font-bold text-zinc-800 dark:text-zinc-200">Board Kanban (7 Status)</span>
+          <span className="text-zinc-300 dark:text-zinc-700 hidden sm:inline">•</span>
+          <span className="text-[11px] text-zinc-400 hidden sm:inline">Gunakan tombol panah / swipe untuk geser kolom</span>
         </div>
 
         <div className="flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => scrollBoard('left')}
-            className="p-1.5 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-700 shadow-2xs transition-all flex items-center gap-1 font-bold text-[11px]"
+            className="p-1.5 sm:p-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-700 shadow-2xs transition-all flex items-center gap-1 font-bold text-xs min-h-[36px] touch-manipulation"
             title="Scroll Kiri"
           >
             <ChevronLeft className="w-4 h-4" />
-            <span>Kiri</span>
+            <span className="hidden sm:inline">Kiri</span>
           </button>
           <button
             type="button"
             onClick={() => scrollBoard('right')}
-            className="p-1.5 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-700 shadow-2xs transition-all flex items-center gap-1 font-bold text-[11px]"
+            className="p-1.5 sm:p-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-700 shadow-2xs transition-all flex items-center gap-1 font-bold text-xs min-h-[36px] touch-manipulation"
             title="Scroll Kanan"
           >
-            <span>Kanan</span>
+            <span className="hidden sm:inline">Kanan</span>
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
@@ -178,9 +177,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
         ref={containerRef}
         onDragOver={handleContainerDragOver}
         onDragLeave={stopAutoScrollLoop}
-        className="w-full overflow-x-auto pb-6 pt-1 touch-pan-x scroll-smooth scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700 scrollbar-track-transparent"
+        className="w-full overflow-x-auto pb-6 pt-1 touch-pan-x snap-x snap-mandatory scroll-smooth scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700 scrollbar-track-transparent"
       >
-        <div className="flex gap-4 min-w-[1400px]">
+        <div className="flex gap-3 sm:gap-4 min-w-[1350px]">
           
           {columns.map(colStatus => {
             const config = STATUS_CONFIG[colStatus];
@@ -193,7 +192,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                 onDragOver={(e) => handleDragOverColumn(e, colStatus)}
                 onDragLeave={(e) => handleDragLeaveColumn(e, colStatus)}
                 onDrop={(e) => handleDrop(e, colStatus)}
-                className={`flex-1 min-w-[260px] max-w-[320px] rounded-2xl p-3 flex flex-col transition-all duration-200 border ${
+                className={`snap-start flex-1 min-w-[270px] max-w-[320px] rounded-2xl p-3 flex flex-col transition-all duration-200 border ${
                   config.columnBg
                 } ${
                   isTargeting 
@@ -215,7 +214,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
 
                   <button
                     onClick={() => onOpenNewJobWithStatus(colStatus)}
-                    className="text-zinc-400 hover:text-zinc-800 dark:hover:text-white text-xs font-bold p-1 rounded-md hover:bg-white dark:hover:bg-zinc-800 transition-colors"
+                    className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white text-xs font-bold px-2 py-1 rounded-lg hover:bg-white dark:hover:bg-zinc-800 transition-colors min-h-[32px] touch-manipulation"
                     title={`Tambah lamaran di kolom ${config.label}`}
                   >
                     + Tambah
@@ -223,14 +222,14 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                 </div>
 
                 {/* Column Cards Drop Area */}
-                <div className="flex-1 space-y-3 min-h-[300px]">
+                <div className="flex-1 space-y-3 min-h-[280px]">
                   {colJobs.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800/80 rounded-xl">
                       <p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">
                         Kosong
                       </p>
                       <p className="text-[10px] text-zinc-400 dark:text-zinc-600 mt-0.5">
-                        Tarik kartu ke sini
+                        Tarik / pindahkan kartu ke sini
                       </p>
                     </div>
                   ) : (
@@ -269,34 +268,40 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                                     e.stopPropagation();
                                     setActiveMenuJobId(activeMenuJobId === job.id ? null : job.id);
                                   }}
-                                  className="p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                                  className="p-1.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 min-h-[32px] min-w-[32px] flex items-center justify-center touch-manipulation"
                                 >
-                                  <MoreVertical className="w-3.5 h-3.5" />
+                                  <MoreVertical className="w-4 h-4" />
                                 </button>
 
                                 {activeMenuJobId === job.id && (
-                                  <div 
-                                    className="absolute right-0 mt-1 w-44 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl p-1.5 z-30 text-left"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <div className="text-[10px] font-bold uppercase text-zinc-400 px-2 py-1">
-                                      Pindah Status:
+                                  <>
+                                    <div 
+                                      className="fixed inset-0 z-20" 
+                                      onClick={() => setActiveMenuJobId(null)} 
+                                    />
+                                    <div 
+                                      className="absolute right-0 mt-1 w-44 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl p-1.5 z-30 text-left animate-in fade-in duration-100"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <div className="text-[10px] font-bold uppercase text-zinc-400 px-2 py-1 border-b border-zinc-100 dark:border-zinc-800 mb-1">
+                                        Pindah Status:
+                                      </div>
+                                      {columns.map(st => (
+                                        <button
+                                          key={st}
+                                          onClick={() => {
+                                            onUpdateStatus(job.id, st);
+                                            setActiveMenuJobId(null);
+                                          }}
+                                          className={`w-full text-left px-2.5 py-1.5 rounded-lg text-[11px] font-medium flex items-center justify-between hover:bg-zinc-100 dark:hover:bg-zinc-800 min-h-[32px] ${
+                                            job.status === st ? 'font-bold text-zinc-900 dark:text-white bg-zinc-50 dark:bg-zinc-800/50' : 'text-zinc-600 dark:text-zinc-400'
+                                          }`}
+                                        >
+                                          <span>{STATUS_CONFIG[st].label}</span>
+                                        </button>
+                                      ))}
                                     </div>
-                                    {columns.map(st => (
-                                      <button
-                                        key={st}
-                                        onClick={() => {
-                                          onUpdateStatus(job.id, st);
-                                          setActiveMenuJobId(null);
-                                        }}
-                                        className={`w-full text-left px-2 py-1 rounded text-[11px] font-medium flex items-center justify-between hover:bg-zinc-100 dark:hover:bg-zinc-800 ${
-                                          job.status === st ? 'font-bold text-zinc-900 dark:text-white bg-zinc-50 dark:bg-zinc-800/50' : 'text-zinc-600 dark:text-zinc-400'
-                                        }`}
-                                      >
-                                        <span>{STATUS_CONFIG[st].label}</span>
-                                      </button>
-                                    ))}
-                                  </div>
+                                  </>
                                 )}
                               </div>
                             </div>
