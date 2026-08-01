@@ -5,22 +5,26 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true, // Send HttpOnly Cookies automatically
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000,
 });
 
-// Inject Authorization Bearer Token if logged in
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('lamarra_jwt_token');
-  if (token && token !== 'undefined' && token !== 'null') {
-    config.headers.Authorization = `Bearer ${token}`;
+// Inject Authorization Bearer Token as fallback if present in localStorage
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('lamarra_jwt_token');
+    if (token && token !== 'undefined' && token !== 'null') {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
+);
 
 // Handle global response errors (e.g. 401 Unauthorized or 403 Forbidden)
 apiClient.interceptors.response.use(

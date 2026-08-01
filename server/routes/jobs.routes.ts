@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { query } from '../db/pool.js';
 import { authenticateToken, AuthRequest } from '../middleware/auth.js';
+import { CreateJobSchema, UpdateJobSchema, PatchStatusSchema } from '../validators/schemas.js';
 
 const router = Router();
 
@@ -167,29 +168,31 @@ router.get('/', authenticateToken, async (req: AuthRequest, res: Response) => {
 router.post('/', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.id;
+    const parseResult = CreateJobSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      const firstError = parseResult.error.issues[0]?.message || 'Data lamaran tidak valid.';
+      return res.status(400).json({ success: false, error: firstError });
+    }
+
     const {
       companyName,
       companyLogo,
       position,
-      status = 'applied',
-      source = 'LinkedIn',
-      workType = 'Full-time',
-      workLocation = 'Hybrid',
+      status,
+      source,
+      workType,
+      workLocation,
       locationName,
       salaryRange,
       jobUrl,
       appliedDate = new Date().toISOString().split('T')[0],
       deadlineDate,
-      priority = 'Medium',
+      priority,
       notes,
       recruiter,
       documents,
       initialReminderDate
-    } = req.body;
-
-    if (!companyName || !position) {
-      return res.status(400).json({ success: false, error: 'Nama Perusahaan dan Posisi wajib diisi.' });
-    }
+    } = parseResult.data;
 
     const logo = companyLogo || generateLogoUrl(companyName, jobUrl);
 
@@ -266,6 +269,13 @@ router.put('/:id', authenticateToken, async (req: AuthRequest, res: Response) =>
   try {
     const userId = req.user?.id;
     const { id } = req.params;
+
+    const parseResult = UpdateJobSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      const firstError = parseResult.error.issues[0]?.message || 'Data pembaruan lamaran tidak valid.';
+      return res.status(400).json({ success: false, error: firstError });
+    }
+
     const {
       companyName,
       companyLogo,
@@ -283,7 +293,7 @@ router.put('/:id', authenticateToken, async (req: AuthRequest, res: Response) =>
       notes,
       recruiter,
       documents
-    } = req.body;
+    } = parseResult.data;
 
     // Check ownership
     const check = await query('SELECT status FROM job_applications WHERE id = $1 AND user_id = $2', [id, userId]);
@@ -374,11 +384,13 @@ router.patch('/:id/status', authenticateToken, async (req: AuthRequest, res: Res
   try {
     const userId = req.user?.id;
     const { id } = req.params;
-    const { status } = req.body;
 
-    if (!status) {
-      return res.status(400).json({ success: false, error: 'Status baru wajib ditentukan.' });
+    const parseResult = PatchStatusSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return res.status(400).json({ success: false, error: 'Status baru tidak valid.' });
     }
+
+    const { status } = parseResult.data;
 
     const check = await query('SELECT status FROM job_applications WHERE id = $1 AND user_id = $2', [id, userId]);
     if (check.rows.length === 0) {

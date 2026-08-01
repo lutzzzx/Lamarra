@@ -12,7 +12,9 @@ export const pool = new Pool(
   connectionString
     ? {
         connectionString,
-        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+        ssl: process.env.NODE_ENV === 'production' 
+          ? { rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false' } 
+          : false,
       }
     : {
         user: process.env.DB_USER || 'lamarra_user',

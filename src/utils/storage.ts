@@ -57,24 +57,12 @@ export function registerUser(name: string, email: string): User {
   return newUser;
 }
 
-export function loginUser(email: string): User {
-  try {
-    const usersData = localStorage.getItem(USERS_LIST_KEY);
-    const users: User[] = usersData ? JSON.parse(usersData) : [DEMO_USER];
-    
-    const found = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (found) {
-      setCurrentUser(found);
-      return found;
-    }
-  } catch (e) {
-    console.error('Error logging in user:', e);
-  }
-
-  // Fallback create user if not found
-  const nameFromEmail = email.split('@')[0];
-  const capitalized = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
-  return registerUser(capitalized, email);
+/**
+ * @deprecated Legacy localStorage authentication is disabled for security reasons.
+ * Use real API authentication (apiLogin, apiRegister in src/services/api.ts) instead.
+ */
+export function loginUser(_email: string): User {
+  throw new Error('Autentikasi localStorage telah dinonaktifkan. Gunakan API autentikasi resmi.');
 }
 
 export function logoutUser(): void {

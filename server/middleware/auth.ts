@@ -9,18 +9,30 @@ export interface AuthRequest extends Request {
   };
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'lamarra_jwt_secret_key_change_in_production_2026';
+export function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === 'test') {
+      return 'test_secret_key_only_for_unit_tests';
+    }
+    throw new Error('FATAL: JWT_SECRET environment variable is missing.');
+  }
+  return secret;
+}
 
 export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction) => {
+  const cookieToken = req.cookies?.lamarra_auth;
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const headerToken = authHeader && authHeader.split(' ')[1];
+  const token = cookieToken || headerToken;
 
   if (!token || token === 'undefined' || token === 'null') {
     return res.status(401).json({ success: false, error: 'Akses ditolak. Token otentikasi tidak ditemukan.' });
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; name: string };
+    const secret = getJwtSecret();
+    const decoded = jwt.verify(token, secret) as { id: string; email: string; name: string };
     req.user = decoded;
     next();
   } catch (error) {

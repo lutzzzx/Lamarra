@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { query } from '../db/pool.js';
 import { authenticateToken, AuthRequest } from '../middleware/auth.js';
+import { TimelineSchema } from '../validators/schemas.js';
 
 const router = Router();
 
@@ -9,11 +10,14 @@ router.post('/:jobId/timeline', authenticateToken, async (req: AuthRequest, res:
   try {
     const userId = req.user?.id;
     const { jobId } = req.params;
-    const { date, type, title, notes } = req.body;
 
-    if (!date || !type || !title) {
-      return res.status(400).json({ success: false, error: 'Tanggal, tipe, dan judul wajib diisi.' });
+    const parseResult = TimelineSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      const firstError = parseResult.error.issues[0]?.message || 'Data riwayat tidak valid.';
+      return res.status(400).json({ success: false, error: firstError });
     }
+
+    const { date, type, title, notes } = parseResult.data;
 
     // Check ownership
     const check = await query('SELECT id FROM job_applications WHERE id = $1 AND user_id = $2', [jobId, userId]);

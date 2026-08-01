@@ -329,6 +329,8 @@ export default function App() {
         initialTab={currentView === 'welcome' ? 'welcome' : currentView}
         onAuthSuccess={handleAuthSuccess}
         onExploreGuest={() => setCurrentView('dashboard')}
+        user={user}
+        hasToken={hasToken}
       />
     );
   }

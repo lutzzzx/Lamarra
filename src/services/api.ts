@@ -17,6 +17,10 @@ export async function apiLogin(email: string, password: string): Promise<AuthRes
   return data.data;
 }
 
+export async function apiLogout(): Promise<void> {
+  await apiClient.post('/auth/logout');
+}
+
 export async function apiGetMe(): Promise<User> {
   const { data } = await apiClient.get('/auth/me');
   return data.data;

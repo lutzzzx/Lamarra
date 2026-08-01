@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { query, pool } from '../db/pool.js';
 import { authenticateToken, AuthRequest } from '../middleware/auth.js';
+import { ImportPayloadSchema } from '../validators/schemas.js';
 
 const router = Router();
 
@@ -104,15 +105,23 @@ router.post('/import', authenticateToken, async (req: AuthRequest, res: Response
     const userId = req.user?.id;
     const { data: rawJobs } = req.body;
 
-    const jobsArray = Array.isArray(rawJobs) ? rawJobs : (req.body.jobs || []);
-    if (!Array.isArray(jobsArray)) {
-      return res.status(400).json({ success: false, error: 'Format file JSON tidak valid.' });
+    const jobsArray = Array.isArray(rawJobs) ? rawJobs : (req.body.jobs || (Array.isArray(req.body) ? req.body : []));
+    
+    const parseResult = ImportPayloadSchema.safeParse(jobsArray);
+    if (!parseResult.success) {
+      return res.status(400).json({
+        success: false,
+        error: 'Format file JSON atau isi data lamaran tidak valid.',
+        details: parseResult.error.issues[0]?.message
+      });
     }
+
+    const validatedJobs = parseResult.data;
 
     await client.query('BEGIN');
 
     let count = 0;
-    for (const job of jobsArray) {
+    for (const job of validatedJobs) {
       const jobResult = await client.query(
         `INSERT INTO job_applications (
           user_id, company_name, company_logo, position, status, source, work_type, work_location,

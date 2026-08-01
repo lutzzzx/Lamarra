@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { query } from '../db/pool.js';
 import { authenticateToken, AuthRequest } from '../middleware/auth.js';
+import { ReminderSchema } from '../validators/schemas.js';
 
 const router = Router();
 
@@ -38,11 +39,14 @@ router.post('/jobs/:jobId/reminders', authenticateToken, async (req: AuthRequest
   try {
     const userId = req.user?.id;
     const { jobId } = req.params;
-    const { title, dueDate, dueTime, type } = req.body;
 
-    if (!title || !dueDate || !type) {
-      return res.status(400).json({ success: false, error: 'Judul, tanggal jatuh tempo, dan tipe pengingat wajib diisi.' });
+    const parseResult = ReminderSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      const firstError = parseResult.error.issues[0]?.message || 'Data pengingat tidak valid.';
+      return res.status(400).json({ success: false, error: firstError });
     }
+
+    const { title, dueDate, dueTime, type } = parseResult.data;
 
     const check = await query('SELECT id, position, company_name FROM job_applications WHERE id = $1 AND user_id = $2', [jobId, userId]);
     if (check.rows.length === 0) {
@@ -118,11 +122,14 @@ router.put('/reminders/:id', authenticateToken, async (req: AuthRequest, res: Re
   try {
     const userId = req.user?.id;
     const { id } = req.params;
-    const { title, dueDate, dueTime, type } = req.body;
 
-    if (!title || !dueDate || !type) {
-      return res.status(400).json({ success: false, error: 'Judul, tanggal, dan tipe pengingat wajib diisi.' });
+    const parseResult = ReminderSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      const firstError = parseResult.error.issues[0]?.message || 'Data pengingat tidak valid.';
+      return res.status(400).json({ success: false, error: firstError });
     }
+
+    const { title, dueDate, dueTime, type } = parseResult.data;
 
     const check = await query(
       `SELECT r.id, r.job_id
