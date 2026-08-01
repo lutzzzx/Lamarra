@@ -42,26 +42,37 @@ app.use(
 // Cookie Parser for HttpOnly Auth Cookies
 app.use(cookieParser());
 
-// Restrictive CORS Configuration (H-01)
+// Flexible & Secure CORS Configuration
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
   'http://127.0.0.1:3000',
   'http://127.0.0.1:5173',
-  process.env.FRONTEND_URL
-].filter(Boolean) as string[];
+  process.env.FRONTEND_URL,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : undefined,
+]
+  .filter(Boolean)
+  .map((url) => (url as string).replace(/\/$/, ''));
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, postman) in dev
-      if (!origin && process.env.NODE_ENV !== 'production') {
+      // Allow requests without origin (same-origin, mobile apps, curl, etc.)
+      if (!origin) {
         return callback(null, true);
       }
-      if (!origin || allowedOrigins.includes(origin)) {
+
+      const cleanOrigin = origin.replace(/\/$/, '');
+      const isVercelDomain = cleanOrigin.endsWith('.vercel.app');
+      const isCustomDomain = cleanOrigin.endsWith('luthfiaz.site') || cleanOrigin.endsWith('.luthfiaz.site');
+      const isExplicitlyAllowed = allowedOrigins.includes(cleanOrigin);
+
+      if (isExplicitlyAllowed || isVercelDomain || isCustomDomain || process.env.NODE_ENV !== 'production') {
         callback(null, true);
       } else {
-        callback(new Error(`CORS Error: Origin ${origin} not allowed.`));
+        console.warn(`CORS blocked for origin: ${origin}`);
+        callback(null, false);
       }
     },
     credentials: true,
