@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User } from '../types';
-import { apiLogin, apiRegister } from '../services/api';
+import { AuthForm } from './AuthForm';
 import { 
   Briefcase, 
   ArrowRight, 
@@ -50,59 +50,8 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
   const isLoggedIn = !!(user || hasToken);
   const [activeTab, setActiveTab] = useState<'welcome' | 'login' | 'register'>(initialTab);
   
-  // Form state for auth
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-
-  const [registerName, setRegisterName] = useState('');
-  const [registerEmail, setRegisterEmail] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
-
-  const [authError, setAuthError] = useState('');
-  const [loading, setLoading] = useState(false);
-
   // FAQ Accordion State
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!loginEmail.trim() || !loginPassword) {
-      setAuthError('Mohon masukkan email dan kata sandi.');
-      return;
-    }
-    setLoading(true);
-    setAuthError('');
-    try {
-      const res = await apiLogin(loginEmail.trim(), loginPassword);
-      onAuthSuccess(res.user, res.token);
-    } catch (err: any) {
-      setAuthError(err.response?.data?.error || 'Gagal masuk. Periksa email dan kata sandi.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRegisterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!registerName.trim() || !registerEmail.trim() || !registerPassword) {
-      setAuthError('Mohon lengkapi nama, email, dan kata sandi.');
-      return;
-    }
-    if (registerPassword.length < 6) {
-      setAuthError('Kata sandi minimal 6 karakter.');
-      return;
-    }
-    setLoading(true);
-    setAuthError('');
-    try {
-      const res = await apiRegister(registerName.trim(), registerEmail.trim(), registerPassword);
-      onAuthSuccess(res.user, res.token);
-    } catch (err: any) {
-      setAuthError(err.response?.data?.error || 'Gagal mendaftar. Email mungkin sudah terdaftar.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const faqs = [
     {
@@ -139,7 +88,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           
           <div 
-            onClick={() => { setActiveTab('welcome'); setAuthError(''); }}
+            onClick={() => setActiveTab('welcome')}
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="w-9 h-9 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold shadow-sm shrink-0 group-hover:scale-105 transition-transform">
@@ -157,7 +106,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
 
           <div className="flex items-center gap-2 text-xs font-semibold">
             <button
-              onClick={() => { setActiveTab('welcome'); setAuthError(''); }}
+              onClick={() => setActiveTab('welcome')}
               className={`px-3 py-1.5 rounded-lg transition-all ${
                 activeTab === 'welcome' 
                   ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white font-bold' 
@@ -179,7 +128,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
             ) : (
               <>
                 <button
-                  onClick={() => { setActiveTab('login'); setAuthError(''); }}
+                  onClick={() => setActiveTab('login')}
                   className={`px-3.5 py-1.5 rounded-lg border transition-all ${
                     activeTab === 'login'
                       ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border-zinc-900 dark:border-white font-bold'
@@ -190,7 +139,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
                 </button>
 
                 <button
-                  onClick={() => { setActiveTab('register'); setAuthError(''); }}
+                  onClick={() => setActiveTab('register')}
                   className={`px-3.5 py-1.5 rounded-lg transition-all shadow-xs hidden sm:inline-flex items-center gap-1 ${
                     activeTab === 'register'
                       ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold'
@@ -646,175 +595,70 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
           </div>
         )}
 
-        {/* VIEW 2: LOGIN FORM TAB */}
-        {activeTab === 'login' && (
-          <div className="max-w-md mx-auto px-4 py-8 animate-in fade-in duration-200">
-            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-8 shadow-xl space-y-6">
+        {/* VIEW 2 & 3: LOGIN / REGISTER AUTHENTICATION */}
+        {activeTab !== 'welcome' && (
+          <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 animate-in fade-in duration-300">
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-10 shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
               
-              <div className="text-center space-y-1">
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">
-                  Masuk ke Akun Lamarra
-                </h2>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  Masukkan email dan kata sandi Anda untuk mengakses dashboard
-                </p>
+              {/* Left Column: SaaS Feature Highlights & Branding */}
+              <div className="hidden md:block md:col-span-5 space-y-6 text-left border-r border-zinc-100 dark:border-zinc-800/80 pr-6">
+                <div className="space-y-2">
+                  <div className="w-10 h-10 rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold shadow-md">
+                    <Briefcase className="w-5 h-5 stroke-[2.2]" />
+                  </div>
+                  <h3 className="text-lg font-extrabold text-zinc-900 dark:text-white">
+                    Lamarra Job Tracker
+                  </h3>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                    Organisasi seluruh lamaran kerja Anda dalam satu platform terpadu.
+                  </p>
+                </div>
+
+                <div className="space-y-4 pt-2 text-xs">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5 font-bold">
+                      <Check className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-zinc-900 dark:text-white">Kanban & 3 Tampilan</h4>
+                      <p className="text-[11px] text-zinc-500">Pantau status lamaran dengan Kanban, List, dan Grid view.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5 font-bold">
+                      <Check className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-zinc-900 dark:text-white">Pengingat Jadwal & Jam</h4>
+                      <p className="text-[11px] text-zinc-500">Atur tanggal dan jam opsional untuk agenda interview Anda.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 mt-0.5 font-bold">
+                      <Check className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-zinc-900 dark:text-white">PostgreSQL Security</h4>
+                      <p className="text-[11px] text-zinc-500">Data Anda tersimpan terisolasi per akun di database server.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium">
+                  <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                  <span>100% Bebas Gratis Tanpa Biaya</span>
+                </div>
               </div>
 
-              {authError && (
-                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-medium">
-                  {authError}
-                </div>
-              )}
-
-              <form onSubmit={handleLoginSubmit} className="space-y-4 text-xs">
-                <div className="space-y-1">
-                  <label className="font-bold text-zinc-700 dark:text-zinc-300 block">
-                    Email
-                  </label>
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="email"
-                      required
-                      value={loginEmail}
-                      onChange={(e) => setLoginEmail(e.target.value)}
-                      className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-white/10"
-                      placeholder="nama@email.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="font-bold text-zinc-700 dark:text-zinc-300 block">
-                    Kata Sandi
-                  </label>
-                  <div className="relative">
-                    <Lock className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="password"
-                      required
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-white/10"
-                      placeholder="••••••••"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-2 text-xs"
-                >
-                  {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-                  <span>Masuk Akun</span>
-                </button>
-              </form>
-
-              <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 text-center text-xs text-zinc-500">
-                Belum punya akun?{' '}
-                <button
-                  onClick={() => { setActiveTab('register'); setAuthError(''); }}
-                  className="font-bold text-zinc-900 dark:text-white hover:underline"
-                >
-                  Daftar Gratis
-                </button>
-              </div>
-
-            </div>
-          </div>
-        )}
-
-        {/* VIEW 3: REGISTER FORM TAB */}
-        {activeTab === 'register' && (
-          <div className="max-w-md mx-auto px-4 py-8 animate-in fade-in duration-200">
-            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-8 shadow-xl space-y-6">
-              
-              <div className="text-center space-y-1">
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">
-                  Daftar Akun Baru
-                </h2>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  Buat akun gratis untuk mengelola seluruh data lamaran Anda
-                </p>
-              </div>
-
-              {authError && (
-                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-medium">
-                  {authError}
-                </div>
-              )}
-
-              <form onSubmit={handleRegisterSubmit} className="space-y-4 text-xs">
-                <div className="space-y-1">
-                  <label className="font-bold text-zinc-700 dark:text-zinc-300 block">
-                    Nama Lengkap
-                  </label>
-                  <div className="relative">
-                    <UserIcon className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      required
-                      value={registerName}
-                      onChange={(e) => setRegisterName(e.target.value)}
-                      className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-white/10"
-                      placeholder="Nama Anda"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="font-bold text-zinc-700 dark:text-zinc-300 block">
-                    Email
-                  </label>
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="email"
-                      required
-                      value={registerEmail}
-                      onChange={(e) => setRegisterEmail(e.target.value)}
-                      className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-white/10"
-                      placeholder="nama@email.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="font-bold text-zinc-700 dark:text-zinc-300 block">
-                    Kata Sandi
-                  </label>
-                  <div className="relative">
-                    <Lock className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="password"
-                      required
-                      value={registerPassword}
-                      onChange={(e) => setRegisterPassword(e.target.value)}
-                      className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900/10 dark:focus:ring-white/10"
-                      placeholder="Minimal 6 karakter"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-2 text-xs"
-                >
-                  {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-                  <span>Daftar Akun Sekarang</span>
-                </button>
-              </form>
-
-              <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 text-center text-xs text-zinc-500">
-                Sudah punya akun?{' '}
-                <button
-                  onClick={() => { setActiveTab('login'); setAuthError(''); }}
-                  className="font-bold text-zinc-900 dark:text-white hover:underline"
-                >
-                  Masuk Akun
-                </button>
+              {/* Right Column: Interactive AuthForm Component */}
+              <div className="md:col-span-7">
+                <AuthForm
+                  initialMode={activeTab === 'register' ? 'register' : 'login'}
+                  onModeChange={(mode) => setActiveTab(mode)}
+                  onSuccess={onAuthSuccess}
+                />
               </div>
 
             </div>

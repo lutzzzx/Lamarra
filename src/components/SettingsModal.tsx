@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User } from '../types';
 import { apiUpdateProfile, apiDeleteAccount } from '../services/api';
+import { getStoredTheme, applyTheme, ThemeMode } from '../utils/theme';
 import { 
   X, 
   User as UserIcon, 
@@ -12,7 +13,12 @@ import {
   Mail, 
   Calendar,
   Loader2,
-  Trash2
+  Trash2,
+  Sun,
+  Moon,
+  Monitor,
+  Check,
+  Palette
 } from 'lucide-react';
 import { formatDate } from '../utils/formatters';
 
@@ -33,7 +39,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onLogout,
   addToast
 }) => {
-  const [activeTab, setActiveTab] = useState<'profile' | 'session' | 'danger'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'theme' | 'session' | 'danger'>('profile');
+
+  // Theme State
+  const [currentTheme, setCurrentTheme] = useState<ThemeMode>(getStoredTheme());
 
   // Profile Form States
   const [name, setName] = useState(user?.name || '');
@@ -51,7 +60,28 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState('');
 
+  React.useEffect(() => {
+    if (isOpen) {
+      setCurrentTheme(getStoredTheme());
+      setName(user?.name || '');
+      setEmail(user?.email || '');
+    }
+  }, [isOpen, user]);
+
   if (!isOpen) return null;
+
+  const handleThemeChange = (mode: ThemeMode) => {
+    setCurrentTheme(mode);
+    applyTheme(mode);
+    addToast(
+      mode === 'dark' 
+        ? 'Mode Gelap (Dark Mode) diaktifkan.' 
+        : mode === 'light' 
+        ? 'Mode Terang (Light Mode) diaktifkan.' 
+        : 'Tema disesuaikan dengan preferensi sistem OS Anda.',
+      'info'
+    );
+  };
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,14 +171,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 Pengaturan Akun & Keamanan
               </h2>
               <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 truncate hidden sm:block">
-                Kelola informasi profil, kata sandi, dan sesi akun Anda
+                Kelola informasi profil, preferensi tema, kata sandi, dan sesi akun Anda
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 rounded-xl hover:bg-zinc-200/50 dark:hover:bg-zinc-800 transition-colors shrink-0 min-h-[38px] min-w-[38px] flex items-center justify-center touch-manipulation"
+            className="p-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 rounded-xl hover:bg-zinc-200/50 dark:hover:bg-zinc-800 transition-colors shrink-0 min-h-[38px] min-w-[38px] flex items-center justify-center touch-manipulation cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -161,7 +191,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('profile')}
-              className={`flex-1 min-w-[90px] px-3 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 min-h-[38px] touch-manipulation whitespace-nowrap ${
+              className={`flex-1 min-w-[80px] px-3 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 min-h-[38px] touch-manipulation whitespace-nowrap cursor-pointer ${
                 activeTab === 'profile'
                   ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700'
                   : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
@@ -174,8 +204,22 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
             <button
               type="button"
+              onClick={() => setActiveTab('theme')}
+              className={`flex-1 min-w-[80px] px-3 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 min-h-[38px] touch-manipulation whitespace-nowrap cursor-pointer ${
+                activeTab === 'theme'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700'
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Palette className="w-3.5 h-3.5 shrink-0" />
+              <span className="sm:hidden">Tema</span>
+              <span className="hidden sm:inline">Tampilan & Tema</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setActiveTab('session')}
-              className={`flex-1 min-w-[90px] px-3 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 min-h-[38px] touch-manipulation whitespace-nowrap ${
+              className={`flex-1 min-w-[80px] px-3 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 min-h-[38px] touch-manipulation whitespace-nowrap cursor-pointer ${
                 activeTab === 'session'
                   ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700'
                   : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
@@ -189,7 +233,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('danger')}
-              className={`flex-1 min-w-[90px] px-3 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 min-h-[38px] touch-manipulation whitespace-nowrap ${
+              className={`flex-1 min-w-[80px] px-3 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 min-h-[38px] touch-manipulation whitespace-nowrap cursor-pointer ${
                 activeTab === 'danger'
                   ? 'bg-rose-600 text-white shadow-xs'
                   : 'text-rose-500/80 hover:text-rose-600'
@@ -303,7 +347,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <button
                   type="submit"
                   disabled={profileLoading}
-                  className="w-full sm:w-auto px-5 py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 min-h-[44px] touch-manipulation"
+                  className="w-full sm:w-auto px-5 py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 min-h-[44px] touch-manipulation cursor-pointer"
                 >
                   {profileLoading && <Loader2 className="w-4 h-4 animate-spin shrink-0" />}
                   <span>Simpan Perubahan Profil</span>
@@ -312,7 +356,131 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </form>
           )}
 
-          {/* TAB 2: Session & Logout */}
+          {/* TAB 2: Appearance & Dark Mode */}
+          {activeTab === 'theme' && (
+            <div className="space-y-5 animate-in fade-in duration-200">
+              <div className="space-y-1">
+                <h3 className="font-bold text-xs text-zinc-900 dark:text-white flex items-center gap-1.5">
+                  <Palette className="w-4 h-4 text-zinc-400" />
+                  <span>Pilih Preferensi Tema Aplikasi</span>
+                </h3>
+                <p className="text-[11px] text-zinc-400 leading-relaxed">
+                  Sesuaikan mode tampilan antarmuka sesuai kenyamanan mata Anda. Pilihan tema disimpan secara otomatis di browser ini.
+                </p>
+              </div>
+
+              {/* Theme Mode Selector Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                
+                {/* Light Mode Option */}
+                <div 
+                  onClick={() => handleThemeChange('light')}
+                  className={`p-4 rounded-2xl cursor-pointer transition-all duration-200 space-y-3 relative group ${
+                    currentTheme === 'light'
+                      ? 'bg-zinc-50 dark:bg-zinc-800/80 border-2 border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 shadow-md'
+                      : 'bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50/80 dark:hover:bg-zinc-800/40'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold transition-colors ${
+                      currentTheme === 'light'
+                        ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-xs'
+                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400'
+                    }`}>
+                      <Sun className="w-4.5 h-4.5" />
+                    </div>
+                    {currentTheme === 'light' ? (
+                      <span className="w-5 h-5 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-xs">
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      </span>
+                    ) : (
+                      <span className="w-5 h-5 rounded-full border border-zinc-200 dark:border-zinc-700" />
+                    )}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs text-zinc-900 dark:text-white">Mode Terang</h4>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-tight">Tampilan latar bersih serba putih & zinc terang.</p>
+                  </div>
+                </div>
+
+                {/* Dark Mode Option */}
+                <div 
+                  onClick={() => handleThemeChange('dark')}
+                  className={`p-4 rounded-2xl cursor-pointer transition-all duration-200 space-y-3 relative group ${
+                    currentTheme === 'dark'
+                      ? 'bg-zinc-50 dark:bg-zinc-800/80 border-2 border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 shadow-md'
+                      : 'bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50/80 dark:hover:bg-zinc-800/40'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold transition-colors ${
+                      currentTheme === 'dark'
+                        ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-xs'
+                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400'
+                    }`}>
+                      <Moon className="w-4.5 h-4.5" />
+                    </div>
+                    {currentTheme === 'dark' ? (
+                      <span className="w-5 h-5 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-xs">
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      </span>
+                    ) : (
+                      <span className="w-5 h-5 rounded-full border border-zinc-200 dark:border-zinc-700" />
+                    )}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs text-zinc-900 dark:text-white">Mode Gelap</h4>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-tight">Sleek dark theme untuk kenyamanan malam hari.</p>
+                  </div>
+                </div>
+
+                {/* System Preference Option */}
+                <div 
+                  onClick={() => handleThemeChange('system')}
+                  className={`p-4 rounded-2xl cursor-pointer transition-all duration-200 space-y-3 relative group ${
+                    currentTheme === 'system'
+                      ? 'bg-zinc-50 dark:bg-zinc-800/80 border-2 border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 shadow-md'
+                      : 'bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50/80 dark:hover:bg-zinc-800/40'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold transition-colors ${
+                      currentTheme === 'system'
+                        ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-xs'
+                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400'
+                    }`}>
+                      <Monitor className="w-4.5 h-4.5" />
+                    </div>
+                    {currentTheme === 'system' ? (
+                      <span className="w-5 h-5 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-xs">
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      </span>
+                    ) : (
+                      <span className="w-5 h-5 rounded-full border border-zinc-200 dark:border-zinc-700" />
+                    )}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs text-zinc-900 dark:text-white">Ikuti Sistem OS</h4>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-tight">Otomatis ikuti tema OS / Perangkat Anda.</p>
+                  </div>
+                </div>
+
+              </div>
+
+              <div className="p-4 bg-zinc-100/70 dark:bg-zinc-800/50 border border-zinc-200/80 dark:border-zinc-700/80 rounded-2xl text-xs text-zinc-600 dark:text-zinc-400 space-y-1">
+                <span className="font-bold text-zinc-900 dark:text-white block flex items-center gap-1.5">
+                  <Palette className="w-3.5 h-3.5 text-zinc-500" />
+                  <span>Dukungan Tema Menyeluruh</span>
+                </span>
+                <p className="text-[11px] leading-relaxed">
+                  Seluruh elemen antarmuka Lamarra (Kanban board, List view, Grid view, Form modal, Date picker, hingga Drawer detail) dioptimalkan penuh mengikuti preferensi mode tampilan yang Anda pilih.
+                </p>
+              </div>
+
+            </div>
+          )}
+
+          {/* TAB 3: Session & Logout */}
           {activeTab === 'session' && (
             <div className="space-y-5 animate-in fade-in duration-200">
               <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-200 dark:border-zinc-700 space-y-3">
@@ -357,7 +525,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       onLogout();
                       onClose();
                     }}
-                    className="w-full sm:w-auto px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-sm text-xs min-h-[44px] touch-manipulation"
+                    className="w-full sm:w-auto px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-sm text-xs min-h-[44px] touch-manipulation cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5 shrink-0" />
                     <span>Keluar Sekarang (Logout)</span>
@@ -367,7 +535,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           )}
 
-          {/* TAB 3: Danger Zone */}
+          {/* TAB 4: Danger Zone */}
           {activeTab === 'danger' && (
             <form onSubmit={handleDeleteAccountSubmit} className="space-y-5 animate-in fade-in duration-200">
               
