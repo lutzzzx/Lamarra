@@ -8,13 +8,22 @@ const { Pool } = pg;
 // Support both DATABASE_URL (for Vercel/Supabase/Neon) and individual DB env vars
 const connectionString = process.env.DATABASE_URL;
 
+// SSL configuration for Supabase / Cloud Postgres
+const isProduction = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+const sslConfig = process.env.DB_SSL_REJECT_UNAUTHORIZED === 'true'
+  ? { rejectUnauthorized: true }
+  : { rejectUnauthorized: false };
+
 export const pool = new Pool(
   connectionString
     ? {
         connectionString,
-        ssl: process.env.NODE_ENV === 'production' 
-          ? { rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false' } 
+        ssl: isProduction || connectionString.includes('supabase') || connectionString.includes('sslmode=require') 
+          ? sslConfig 
           : false,
+        max: process.env.VERCEL ? 5 : 10,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 10000,
       }
     : {
         user: process.env.DB_USER || 'lamarra_user',
@@ -22,6 +31,7 @@ export const pool = new Pool(
         host: process.env.DB_HOST || 'localhost',
         port: parseInt(process.env.DB_PORT || '5432', 10),
         database: process.env.DB_NAME || 'lamarra_db',
+        max: 10,
       }
 );
 
