@@ -6,8 +6,6 @@ import {
   MapPin, 
   Calendar, 
   MoreVertical, 
-  ExternalLink, 
-  FileText, 
   Clock, 
   ChevronLeft,
   ChevronRight,
@@ -134,7 +132,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
 
   const scrollBoard = (direction: 'left' | 'right') => {
     if (containerRef.current) {
-      const amount = direction === 'left' ? -290 : 290;
+      const amount = direction === 'left' ? -240 : 240;
       containerRef.current.scrollBy({ left: amount, behavior: 'smooth' });
     }
   };
@@ -143,7 +141,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     <div className="w-full relative group/board">
       
       {/* Scroll Navigation Header & Quick Controls */}
-      <div className="flex items-center justify-between pb-3 px-1 text-xs">
+      <div className="flex items-center justify-between pb-2.5 px-1 text-xs">
         <div className="flex items-center gap-1.5 sm:gap-2 text-zinc-500 dark:text-zinc-400 font-medium">
           <span className="font-bold text-zinc-800 dark:text-zinc-200">Board Kanban (7 Status)</span>
           <span className="text-zinc-300 dark:text-zinc-700 hidden sm:inline">•</span>
@@ -177,9 +175,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
         ref={containerRef}
         onDragOver={handleContainerDragOver}
         onDragLeave={stopAutoScrollLoop}
-        className="w-full overflow-x-auto pb-6 pt-1 touch-pan-x snap-x snap-mandatory scroll-smooth scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700 scrollbar-track-transparent"
+        className="w-full overflow-x-auto pb-4 pt-1 touch-auto snap-x snap-mandatory scroll-smooth scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700 scrollbar-track-transparent"
       >
-        <div className="flex gap-3 sm:gap-4 min-w-[1350px]">
+        <div className="flex gap-2.5 sm:gap-4 min-w-[1150px] sm:min-w-[1350px]">
           
           {columns.map(colStatus => {
             const config = STATUS_CONFIG[colStatus];
@@ -192,7 +190,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                 onDragOver={(e) => handleDragOverColumn(e, colStatus)}
                 onDragLeave={(e) => handleDragLeaveColumn(e, colStatus)}
                 onDrop={(e) => handleDrop(e, colStatus)}
-                className={`snap-start flex-1 min-w-[270px] max-w-[320px] rounded-2xl p-3 flex flex-col transition-all duration-200 border ${
+                className={`snap-start flex-1 min-w-[220px] sm:min-w-[270px] max-w-[260px] sm:max-w-[320px] rounded-2xl p-2.5 sm:p-3 flex flex-col transition-all duration-200 border ${
                   config.columnBg
                 } ${
                   isTargeting 
@@ -201,20 +199,20 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                 }`}
               >
                 {/* Column Header */}
-                <div className="flex items-center justify-between pb-3 mb-2 border-b border-zinc-200/80 dark:border-zinc-800/80">
-                  <div className="flex items-center gap-2">
-                    <span className={`w-2.5 h-2.5 rounded-full ${config.dotBg}`} />
-                    <h3 className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
+                <div className="flex items-center justify-between pb-2 mb-2 border-b border-zinc-200/80 dark:border-zinc-800/80">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <span className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${config.dotBg}`} />
+                    <h3 className="text-[11px] sm:text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
                       {config.label}
                     </h3>
-                    <span className="px-2 py-0.5 text-[11px] font-bold rounded-md bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300">
+                    <span className="px-1.5 py-0.2 sm:px-2 sm:py-0.5 text-[10px] sm:text-[11px] font-bold rounded-md bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300">
                       {colJobs.length}
                     </span>
                   </div>
 
                   <button
                     onClick={() => onOpenNewJobWithStatus(colStatus)}
-                    className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white text-xs font-bold px-2 py-1 rounded-lg hover:bg-white dark:hover:bg-zinc-800 transition-colors min-h-[32px] touch-manipulation"
+                    className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white text-[11px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-lg hover:bg-white dark:hover:bg-zinc-800 transition-colors min-h-[30px] touch-manipulation"
                     title={`Tambah lamaran di kolom ${config.label}`}
                   >
                     + Tambah
@@ -222,14 +220,14 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                 </div>
 
                 {/* Column Cards Drop Area */}
-                <div className="flex-1 space-y-3 min-h-[280px]">
+                <div className="flex-1 space-y-2 sm:space-y-3 min-h-[140px] sm:min-h-[280px]">
                   {colJobs.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center p-6 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800/80 rounded-xl">
-                      <p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">
+                    <div className="h-full flex flex-col items-center justify-center p-4 sm:p-6 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800/80 rounded-xl min-h-[120px]">
+                      <p className="text-[11px] sm:text-xs text-zinc-400 dark:text-zinc-500 font-medium">
                         Kosong
                       </p>
-                      <p className="text-[10px] text-zinc-400 dark:text-zinc-600 mt-0.5">
-                        Tarik / pindahkan kartu ke sini
+                      <p className="text-[9px] sm:text-[10px] text-zinc-400 dark:text-zinc-600 mt-0.5">
+                        Pindahkan kartu ke sini
                       </p>
                     </div>
                   ) : (
@@ -243,21 +241,21 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                           draggable
                           onDragStart={(e) => handleDragStart(e, job.id)}
                           onDragEnd={handleDragEnd}
-                          className={`bg-white dark:bg-zinc-900 border border-zinc-200/90 dark:border-zinc-800 rounded-xl p-3.5 shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing relative group ${
+                          className={`bg-white dark:bg-zinc-900 border border-zinc-200/90 dark:border-zinc-800 rounded-xl p-2.5 sm:p-3.5 shadow-2xs hover:shadow-sm transition-all cursor-grab active:cursor-grabbing relative group ${
                             isBeingDragged ? 'opacity-40 scale-95 border-dashed border-zinc-500' : ''
                           }`}
                         >
                           {/* Drag Handle & Priority Badge */}
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-1.5 text-zinc-300 dark:text-zinc-700 group-hover:text-zinc-500 transition-colors">
-                              <GripVertical className="w-3.5 h-3.5" />
-                              <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <div className="flex items-center gap-1 text-zinc-300 dark:text-zinc-700 group-hover:text-zinc-500 transition-colors">
+                              <GripVertical className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                              <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-zinc-400">
                                 {job.source}
                               </span>
                             </div>
 
                             <div className="flex items-center gap-1">
-                              <span className={`px-2 py-0.5 text-[10px] font-bold rounded-md border ${priorityCfg.color} ${priorityCfg.border}`}>
+                              <span className={`px-1.5 py-0.2 sm:px-2 sm:py-0.5 text-[9px] sm:text-[10px] font-bold rounded-md border ${priorityCfg.color} ${priorityCfg.border}`}>
                                 {priorityCfg.label}
                               </span>
 
@@ -268,9 +266,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                                     e.stopPropagation();
                                     setActiveMenuJobId(activeMenuJobId === job.id ? null : job.id);
                                   }}
-                                  className="p-1.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 min-h-[32px] min-w-[32px] flex items-center justify-center touch-manipulation"
+                                  className="p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 min-h-[28px] min-w-[28px] flex items-center justify-center touch-manipulation"
                                 >
-                                  <MoreVertical className="w-4 h-4" />
+                                  <MoreVertical className="w-3.5 h-3.5" />
                                 </button>
 
                                 {activeMenuJobId === job.id && (
@@ -312,15 +310,15 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                             onClick={() => onSelectJob(job)}
                             className="cursor-pointer space-y-1"
                           >
-                            <div className="flex items-start gap-2.5">
-                              <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-bold text-xs flex items-center justify-center shrink-0 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div className="flex items-start gap-2">
+                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-bold text-[11px] sm:text-xs flex items-center justify-center shrink-0 border border-zinc-200/60 dark:border-zinc-700/60">
                                 {getCompanyInitials(job.companyName)}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate hover:underline">
+                                <h4 className="text-[11px] sm:text-xs font-bold text-zinc-900 dark:text-white truncate hover:underline leading-tight">
                                   {job.position}
                                 </h4>
-                                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate flex items-center gap-1">
+                                <p className="text-[10px] sm:text-[11px] text-zinc-500 dark:text-zinc-400 truncate flex items-center gap-1 mt-0.5">
                                   <Building2 className="w-3 h-3 text-zinc-400 shrink-0" />
                                   <span>{job.companyName}</span>
                                 </p>
@@ -328,31 +326,31 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                             </div>
 
                             {/* Location & Work Type Tags */}
-                            <div className="pt-2 flex flex-wrap gap-1 text-[10px] text-zinc-600 dark:text-zinc-400">
-                              <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700/80 font-medium">
+                            <div className="pt-1.5 flex flex-wrap gap-1 text-[9px] sm:text-[10px] text-zinc-600 dark:text-zinc-400">
+                              <span className="px-1.5 py-0.2 sm:py-0.5 rounded bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700/80 font-medium">
                                 {job.workLocation}
                               </span>
-                              <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700/80 font-medium">
+                              <span className="px-1.5 py-0.2 sm:py-0.5 rounded bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700/80 font-medium">
                                 {job.workType}
                               </span>
                               {job.salaryRange && (
-                                <span className="px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 font-medium truncate max-w-[140px]">
+                                <span className="px-1.5 py-0.2 sm:py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 font-medium truncate max-w-[120px]">
                                   {job.salaryRange}
                                 </span>
                               )}
                             </div>
 
                             {/* Applied Date & Reminders Indicator */}
-                            <div className="mt-2.5 pt-2 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between text-[10px] text-zinc-400">
+                            <div className="mt-2 pt-1.5 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between text-[9px] sm:text-[10px] text-zinc-400">
                               <span className="flex items-center gap-1">
-                                <Calendar className="w-3 h-3" />
+                                <Calendar className="w-3 h-3 text-zinc-400" />
                                 <span>{formatDate(job.appliedDate)}</span>
                               </span>
 
                               {job.reminders && job.reminders.filter(r => !r.isCompleted).length > 0 && (
-                                <span className="px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 font-bold flex items-center gap-1">
+                                <span className="px-1.5 py-0.2 rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 font-bold flex items-center gap-1">
                                   <Clock className="w-3 h-3" />
-                                  <span>{job.reminders.filter(r => !r.isCompleted).length} Agenda</span>
+                                  <span>{job.reminders.filter(r => !r.isCompleted).length}</span>
                                 </span>
                               )}
                             </div>
